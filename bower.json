@@ -1,0 +1,22 @@
+{
+  "name": "chess-ai",
+  "version": "0.1.0",
+  "description": "chess-ai",
+  "license": "GPL-3.0",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "3.3.4",
+    "breakpoint": "~4.6.4",
+    "breakpoint-sass": "~2.6.1",
+    "compass-mixins": "~1.0.2",
+    "jquery": "~2.1.1",
+    "modernizr": "~2.6.2",
+  }
+}
