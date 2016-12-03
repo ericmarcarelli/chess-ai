@@ -1,0 +1,10 @@
+vendor
+node_modules
+.bundle
+_bower
+.sass-cache
+.cache
+.DS_Store
+.idea
+bower_plugins
+bower_components
