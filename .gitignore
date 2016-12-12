@@ -6,5 +6,7 @@ _bower
 .cache
 .DS_Store
 .idea
+css
+js/_plugins.js
 bower_plugins
 bower_components

@@ -1,0 +1,24 @@
+.board-container {
+  background: gray;
+}
+
+.board {
+  margin: auto;
+  max-width: 768px;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+
+  .square {
+    margin: 0;
+    width: 12.5%;
+    padding-bottom: 12.5%;
+    float: left;
+    &.white {
+      background: white;
+    }
+    &.black {
+      background: black;
+    }
+  }
+}

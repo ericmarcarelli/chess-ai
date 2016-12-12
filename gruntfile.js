@@ -14,16 +14,13 @@ module.exports = function(grunt) {
 
     bower_concat: {
       all: {
-        dest: '<%= vars.assetsDir: %>/js/_plugins.js',
-        cssDest: '<%= vars.assetsDir: %>/css/_plugins.css',
+        dest: '<%= vars.assetsDir %>/js/_plugins.js',
+        cssDest: '<%= vars.assetsDir %>/css/_plugins.css',
         exclude: [
           'breakpoint-sass',
           'sassy-maps',
           'compass-mixins'
-        ],
-        mainFiles: {
-          'sidr': ['dist/jquery.sidr.js', 'dist/stylesheets/jquery.sidr.light.css']
-        }
+        ]
       }
     },
 
@@ -32,9 +29,9 @@ module.exports = function(grunt) {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= vars.assetsDir: %>/scss',
+          cwd: '<%= vars.assetsDir %>/scss',
           src: ['*.scss'],
-          dest: '<%= vars.assetsDir: %>/css',
+          dest: '<%= vars.assetsDir %>/css',
           ext: '.css'
         }]
       },
@@ -42,21 +39,21 @@ module.exports = function(grunt) {
         sourceMap: false,
         // outputStyle: 'compressed',
         outputStyle: 'expanded',
-        imagePath: '<%= vars.assetsDir: %>/images/'
+        imagePath: '<%= vars.assetsDir %>/images/'
       }
     },
 
     // Watch the source folder for changes and re-run 'build'
     watch: {
       styles: {
-        files: ['<%= vars.assetsDir: %>/**/*.scss'],
+        files: ['<%= vars.assetsDir %>/**/*.scss'],
         tasks: ['sass']
       },
       // php: {
-      //   files: ['<%= vars.assetsDir: %>/**/*.php']
+      //   files: ['<%= vars.assetsDir %>/**/*.php']
       // },
       js: {
-        files: ['<%= vars.assetsDir: %>/**/*.js']
+        files: ['<%= vars.assetsDir %>/**/*.js']
       }
     }
   });
