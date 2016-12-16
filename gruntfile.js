@@ -31,7 +31,7 @@ module.exports = function(grunt) {
         separator: ";"
       },
       dist: {
-        src: ['<%= vars.sourceDir %>/js/chessai.js', '<%= vars.sourceDir %>/js/board.js'],
+        src: ['<%= vars.sourceDir %>/js/chessai.js', '<%= vars.sourceDir %>/js/board.js', '<%= vars.sourceDir %>/js/options.js'],
         dest: '<%= vars.destDir %>/js/chessai.js'
       },
     },

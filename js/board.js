@@ -16,7 +16,6 @@
     this.init = function() {
       self.setupBoard();
       self.getState();
-      self.rotateBoard();
       return this;
     };
 
@@ -82,6 +81,7 @@
      * @return {[type]} [description]
      */
     this.rotateBoard = function() {
+      console.log('rotateing')
       var $squares = $board.find('.square');
       var newSquares = [];
       $squares.each(function(i, piece) {

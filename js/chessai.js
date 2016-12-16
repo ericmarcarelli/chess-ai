@@ -7,11 +7,11 @@ var ChessAI = {
 
   initialize: function() {
     var modules = [
-      'Board'
+      'Board', 'Options'
     ];
 
     for (var m in modules) {
-      new ChessAI.Modules[modules[m]]();
+      ChessAI.Modules[modules[m]] = new ChessAI.Modules[modules[m]]();
     }
   }
 };
