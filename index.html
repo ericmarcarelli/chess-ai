@@ -18,10 +18,10 @@
         <div class="board-container">
           <div class="board">
             <script>
-              for (var i = 8; i > 0; i--) {
+              for (var i = 0; i < 8; i++) {
                 var white = (i%2 === 0);
                 for (var j = 0; j < 8; j++) {
-                  document.writeln('<div class="square ' + String.fromCharCode(97 + j) + i + ' ' + (white ? 'white' : 'black') + '"></div>');
+                  document.writeln('<div class="square ' + String.fromCharCode(97 + j) + (8-i) + ' square_' + i + 'x' + j + ' ' + (white ? 'white' : 'black') + '" data-piece="0"></div>');
                   white = !white;
                 }
               }
@@ -30,7 +30,7 @@
         </div>
 
         <script src="js/_plugins.js"></script>
-        <!-- <script src="js/main.js"></script> -->
+        <script src="js/chessai.js"></script>
 
     </body>
 </html>

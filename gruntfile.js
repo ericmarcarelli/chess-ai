@@ -3,7 +3,8 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     vars: {
-      assetsDir: '.'
+      sourceDir: '.',
+      destDir: '_site'
     },
 
     shell: {
@@ -14,8 +15,8 @@ module.exports = function(grunt) {
 
     bower_concat: {
       all: {
-        dest: '<%= vars.assetsDir %>/js/_plugins.js',
-        cssDest: '<%= vars.assetsDir %>/css/_plugins.css',
+        dest: '<%= vars.destDir %>/js/_plugins.js',
+        cssDest: '<%= vars.destDir %>/css/_plugins.css',
         exclude: [
           'breakpoint-sass',
           'sassy-maps',
@@ -24,14 +25,24 @@ module.exports = function(grunt) {
       }
     },
 
-    // Grunt-sass
+    // specific files specified to control order
+    concat: {
+      options: {
+        separator: ";"
+      },
+      dist: {
+        src: ['<%= vars.sourceDir %>/js/chessai.js', '<%= vars.sourceDir %>/js/board.js'],
+        dest: '<%= vars.destDir %>/js/chessai.js'
+      },
+    },
+
     sass: {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= vars.assetsDir %>/scss',
+          cwd: '<%= vars.sourceDir %>/scss',
           src: ['*.scss'],
-          dest: '<%= vars.assetsDir %>/css',
+          dest: '<%= vars.destDir %>/css',
           ext: '.css'
         }]
       },
@@ -39,21 +50,30 @@ module.exports = function(grunt) {
         sourceMap: false,
         // outputStyle: 'compressed',
         outputStyle: 'expanded',
-        imagePath: '<%= vars.assetsDir %>/images/'
+        imagePath: '<%= vars.sourceDir %>/images/'
       }
     },
 
-    // Watch the source folder for changes and re-run 'build'
+    copy: {
+      main: {
+        files: [
+          { expand: true, cwd: '.', src: ['*.html', 'img/**/*', 'img/*', '.htaccess', 'fonts/*.*', '!scss/**', '!img/*.psd', '!db/**', '!*.config.php'], dest: '<%= vars.destDir %>/' }
+        ]
+      }
+    },
+
+    clean: {
+      files: ['<%= vars.destDir %>/*']
+    },
+
     watch: {
       styles: {
-        files: ['<%= vars.assetsDir %>/**/*.scss'],
+        files: ['<%= vars.sourceDir %>/**/*.scss'],
         tasks: ['sass']
       },
-      // php: {
-      //   files: ['<%= vars.assetsDir %>/**/*.php']
-      // },
       js: {
-        files: ['<%= vars.assetsDir %>/**/*.js']
+        files: ['<%= vars.sourceDir %>/**/*.js'],
+        tasks: ['concat']
       }
     }
   });
@@ -62,13 +82,17 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-bower-concat');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-sass');
 
   grunt.registerTask('build', 'Build the site', function() {
     grunt.task.run('shell:bower');
+    grunt.task.run('clean');
     grunt.task.run('bower_concat');
+    grunt.task.run('concat');
     grunt.task.run('sass');
+    grunt.task.run('copy');
   });
 
   grunt.registerTask('dev', '', function() {
