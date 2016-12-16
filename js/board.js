@@ -16,6 +16,7 @@
     this.init = function() {
       self.setupBoard();
       self.getState();
+      self.rotateBoard();
       return this;
     };
 
@@ -72,6 +73,23 @@
           var $square = $('.square_'+i+'x'+j);
           $square.attr('data-piece', state[i][j]);
         }
+      }
+    }
+
+    /**
+     * Rotate board
+     * This is a visual effect only -- it does not change the state.
+     * @return {[type]} [description]
+     */
+    this.rotateBoard = function() {
+      var $squares = $board.find('.square');
+      var newSquares = [];
+      $squares.each(function(i, piece) {
+        newSquares.push(piece)
+      });
+      $squares.remove();
+      for(var i = newSquares.length-1; i >= 0; i--) {
+        $board.append(newSquares[i]);
       }
     }
 
