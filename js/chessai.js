@@ -1,6 +1,7 @@
 var ChessAI = {
 
   Modules: {},
+  LoadedModules: {},
 
   State: {
     board : [],
@@ -19,7 +20,7 @@ var ChessAI = {
     ];
 
     for (var m in modules) {
-      ChessAI.Modules[modules[m]] = new ChessAI.Modules[modules[m]]();
+      ChessAI.LoadedModules[modules[m]] = new ChessAI.Modules[modules[m]]();
     }
   }
 };

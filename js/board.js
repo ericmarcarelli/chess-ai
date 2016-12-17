@@ -2,6 +2,7 @@
   ChessAI.Modules.Board = function() {
     var self = this;
     var $board = $('.board');
+    var rotated = false;
     var P = ChessAI.Piece;
 
     this.init = function() {
@@ -50,9 +51,8 @@
       var $squares = $board.find('.square');
 
       $squares.each(function(i, piece) {
-        var row = parseInt(i / 8);
-        var col = parseInt(i % 8);
-        state[row][col] = $(piece).data('piece');
+        var $piece = $(piece);
+        state[$piece.data('row')][$piece.data('col')] = $piece.data('piece');
       });
 
       return state;
@@ -86,26 +86,38 @@
         $board.append(newSquares[i]);
       }
       self.setupPieceEvents();
+      rotated = true;
     }
 
+    /**
+     * Add events to squares.
+     */
     this.setupPieceEvents = function() {
       $board.find('.square').click(self.selectPiece);
-    }
+    };
 
+    /**
+     * Select a piece and highlight potential moves.
+     */
     this.selectPiece = function() {
       var square = $(this);
       var piece = $(this).data('piece');
       $board.find('.square').removeClass('highlight');
       if (piece != P.Empty) {
-        var moves = ChessAI.Modules.States.getMovesForSquare(self.getState(), square.data('row'), square.data('col'));
+        var moves = ChessAI.LoadedModules.States.getMovesForSquare(self.getState(), square.data('row'), square.data('col'));
         for (var i = 0; i < moves.length; i++) {
           $board.find(self.squareClass(moves[i][0], moves[i][1])).addClass('highlight');
         }
       }
     };
 
+    /**
+     * Get class to selct a square based on row and col.
+     * @param  {int} row
+     * @param  {int} col
+     * @return {String}
+     */
     this.squareClass = function(row, col) {
-      console.log('square_'+row+'x'+col);
       return '.square_'+row+'x'+col;
     };
 

@@ -5,7 +5,7 @@
 
     this.init = function() {
       $('.options .rotate').click(function() {
-        ChessAI.Modules.Board.rotateBoard();
+        ChessAI.LoadedModules.Board.rotateBoard();
       });
 
       return this;

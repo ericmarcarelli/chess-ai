@@ -55,41 +55,39 @@
           // captures
           if (col > 0) {
             if (state[row+dir][col-1] != P.Empty &&
-              this.canCapture(piece, state[row+dir][col-1])) {
+              self.canCapture(piece, state[row+dir][col-1])) {
               moves.push([row+dir,col-1]);
             }
           }
           if (col < 7) {
             if (state[row+dir][col+1] != P.Empty &&
-              this.canCapture(piece, state[row+dir][col+1])) {
+              self.canCapture(piece, state[row+dir][col+1])) {
               moves.push([row+dir,col+1]);
             }
           }
           break;
-
-      };
-
-      /**
-       * Determine if the attacker can capture the target piece.
-       * @param  {ChessAI.Piece} attacker
-       * @param  {ChessAI.Piece} target
-       * @return {bool}
-       */
-      this.canCapture = function(attacker, target) {
-        if (!attacker)
-          return false;
-
-        if (attacker < P.WhiteRook && target > P.BlackPawn && target != P.WhiteKing) {
-          return true;
-        }
-        if (attacker > P.BlackPawn && target < P.WhiteRook && target != P.BlackKing) {
-          return true;
-        }
-
-        return false;
-      };
-
+      }
       return moves;
+    };
+
+    /**
+     * Determine if the attacker can capture the target piece.
+     * @param  {ChessAI.Piece} attacker
+     * @param  {ChessAI.Piece} target
+     * @return {bool}
+     */
+    this.canCapture = function(attacker, target) {
+      if (!attacker)
+        return false;
+
+      if (attacker < P.WhiteRook && target > P.BlackPawn && target != P.WhiteKing) {
+        return true;
+      }
+      if (attacker > P.BlackPawn && target < P.WhiteRook && target != P.BlackKing) {
+        return true;
+      }
+
+      return false;
     };
 
     return this.init();
