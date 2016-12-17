@@ -8,14 +8,14 @@ var ChessAI = {
   },
 
   Piece: {
-    empty : 0, bRook : 1, bKnight : 2, bBishop : 3, bKing : 4, bQueen : 5,
-    bPawn : 6, wRook : 7, wKnight : 8, wBishop : 9, wKing : 10, wQueen : 11,
-    wPawn : 12
+    Empty : 0, BlackRook : 1, BlackKnight : 2, BlackBishop : 3, BlackKing : 4,
+    BlackQueen : 5, BlackPawn : 6, WhiteRook : 7, WhiteKnight : 8,
+    WhiteBishop : 9, WhiteKing : 10, WhiteQueen : 11, WhitePawn : 12
   },
 
   initialize: function() {
     var modules = [
-      'Board', 'Options', 'States'
+      'States', 'Board', 'Options'
     ];
 
     for (var m in modules) {

@@ -6,6 +6,8 @@
     this.init = function() {
       self.setupBoard();
       self.getState();
+      var moves = ChessAI.Modules.States.getMovesForSquare(self.getState(), 1, 1);
+      console.log(moves);
       return this;
     };
 
@@ -45,11 +47,14 @@
         [0,0,0,0,0,0,0,0]
       ];
       var $squares = $board.find('.square');
+      
       $squares.each(function(i, piece) {
         var row = parseInt(i / 8);
         var col = parseInt(i % 8);
         state[row][col] = $(piece).data('piece');
       });
+
+      return state;
     }
 
     /**
