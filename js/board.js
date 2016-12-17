@@ -2,16 +2,6 @@
   ChessAI.Modules.Board = function() {
     var self = this;
     var $board = $('.board');
-    var pieceClasses = [
-      '', 'black_rook', 'black_knight', 'black_bishop', 'black_king',
-      'black_queen', 'black_pawn', 'white_rook', 'white_knight',
-      'white_bishop', 'white_king', 'white_queen', 'white_pawn'
-    ];
-    var pieces = {
-      empty : 0, bRook : 1, bKnight : 2, bBishop : 3, bKing : 4, bQueen : 5,
-      bPawn : 6, wRook : 7, wKnight : 8, wBishop : 9, wKing : 10, wQueen : 11,
-      wPawn : 12
-    };
 
     this.init = function() {
       self.setupBoard();
@@ -78,10 +68,8 @@
     /**
      * Rotate board
      * This is a visual effect only -- it does not change the state.
-     * @return {[type]} [description]
      */
     this.rotateBoard = function() {
-      console.log('rotateing')
       var $squares = $board.find('.square');
       var newSquares = [];
       $squares.each(function(i, piece) {
