@@ -52,6 +52,7 @@
           if (state[row+dir][col] == P.Empty) {
             moves.push([row+dir,col]);
           }
+
           // captures
           if (col > 0) {
             if (state[row+dir][col-1] != P.Empty &&
