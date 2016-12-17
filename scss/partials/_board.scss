@@ -37,6 +37,19 @@
       }
     }
 
+    &.selected {
+      position: relative;
+      &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        content: ' ';
+        border: 5px solid yellow;
+      }
+    }
+
     &[data-piece='1'] {
       background-image: url('../img/pieces/black_rook.png');
     }
