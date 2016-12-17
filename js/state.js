@@ -37,15 +37,21 @@
           break;
 
         case P.BlackKnight:
-        case P.WhiteKing:
+        case P.WhiteKnight:
+          var offsets = [[-2,1], [-1,2], [1,2], [2,1], [2,-1], [1,-2], [-1,-2], [-2,-1]];
+          for(var i = 0; i < offsets.length; i++) {
+            if (validMove(piece, state, row + offsets[i][0], col + offsets[i][1])) {
+              moves.push(new ChessAI.Move(piece, row, col, row + offsets[i][0], col + offsets[i][1]));
+            }
+          }
           break;
 
         case P.BlackKing:
         case P.WhiteKing:
           for(var i = -1; i < 2; i++) {
             for(var j = -1; j < 2; j++) {
-              if (validMove(piece, state, row+i, col+j)) {
-                moves.push(new ChessAI.Move(piece, row, col, row+i, col+j));
+              if (validMove(piece, state, row + i, col + j)) {
+                moves.push(new ChessAI.Move(piece, row, col, row + i, col + j));
               }
             }
           }
