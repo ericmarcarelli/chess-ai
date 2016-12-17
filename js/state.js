@@ -2,6 +2,7 @@
   ChessAI.Modules.States = function() {
     var self = this;
     var P = ChessAI.Piece;
+    var MoveType = { Invalid : 0, Move : 1, Capture : 2};
 
     this.init = function() {
       return this;
@@ -20,27 +21,43 @@
     this.getMovesForSquare = function(state, row, col) {
       var moves = [];
       var piece = state[row][col];
-      var move = new ChessAI.Move;
-      move.piece = piece;
-      move.startRow = row;
-      move.startCol = col;
+      var directions = [];
+      var moveType;
 
       switch(piece) {
-        // the queen falls through to all the moves of the bishop and rook
         case P.BlackQueen:
         case P.WhiteQueen:
+          // the queen has all the moves of the bishop and rook
 
         case P.WhiteBishop:
         case P.BlackBishop:
+          directions = [[-1,-1], [-1,1], [1,1], [1,-1]];
+
         case P.WhiteRook:
         case P.BlackRook:
+          if (piece != P.WhiteBishop && piece != P.BlackBishop) {
+            directions = directions.concat([[-1,0], [0,-1], [1,0], [0,1]]);
+          }
+
+          for(var i = 0; i < directions.length; i++) {
+            for(var j = 1; j < 8; j++) {
+              moveType = validMove(piece, state, row + (directions[i][0] * j), col + (directions[i][1] * j));
+              if (moveType != MoveType.Invalid) {
+                moves.push(new ChessAI.Move(piece, row, col, row + (directions[i][0] * j), col + (directions[i][1] * j)));
+              }
+              if (moveType != MoveType.Move) {
+                break;
+              }
+            }
+          }
+
           break;
 
         case P.BlackKnight:
         case P.WhiteKnight:
           var offsets = [[-2,1], [-1,2], [1,2], [2,1], [2,-1], [1,-2], [-1,-2], [-2,-1]];
           for(var i = 0; i < offsets.length; i++) {
-            if (validMove(piece, state, row + offsets[i][0], col + offsets[i][1])) {
+            if (validMove(piece, state, row + offsets[i][0], col + offsets[i][1]) != MoveType.Invalid) {
               moves.push(new ChessAI.Move(piece, row, col, row + offsets[i][0], col + offsets[i][1]));
             }
           }
@@ -50,7 +67,9 @@
         case P.WhiteKing:
           for(var i = -1; i < 2; i++) {
             for(var j = -1; j < 2; j++) {
-              if (validMove(piece, state, row + i, col + j)) {
+              if (i == 0 && i == 0)
+                continue;
+              if (validMove(piece, state, row + i, col + j) != MoveType.Invalid) {
                 moves.push(new ChessAI.Move(piece, row, col, row + i, col + j));
               }
             }
@@ -87,8 +106,6 @@
           break;
       }
 
-      // check list for check
-
       return moves;
     };
 
@@ -121,17 +138,18 @@
      * @param  {ChessAI.State} state
      * @param  {int} row
      * @param  {int} col
-     * @return {bool}
+     * @return {MoveType}
      */
     var validMove = function(piece, state, row, col) {
-      // piece does not actually move
-      if (row == 0 && col == 0)
-        return false;
       // piece would move off board
       if (row < 0 || col < 0 || row > 7 || col > 7)
-        return false;
+        return MoveType.Invalid;
       var target = state[row][col];
-      return (target == P.Empty || canCapture(piece, target));
+      if (target == P.Empty)
+        return MoveType.Move;
+      if (canCapture(piece, target))
+        return MoveType.Capture;
+      return MoveType.Invalid;
     }
 
     return this.init();
