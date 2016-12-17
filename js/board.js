@@ -4,6 +4,8 @@
     var $board = $('.board');
     var rotated = false;
     var P = ChessAI.Piece;
+    var blackCanCastle = true;
+    var whiteCanCastle = true;
 
     this.init = function() {
       self.setupBoard();
@@ -28,6 +30,11 @@
         [P.WhitePawn, P.WhitePawn, P.WhitePawn, P.WhitePawn, P.WhitePawn, P.WhitePawn, P.WhitePawn, P.WhitePawn],
         [P.WhiteRook, P.WhiteKnight, P.WhiteBishop, P.WhiteQueen, P.WhiteKing, P.WhiteBishop, P.WhiteKnight, P.WhiteRook]
       ];
+
+      blackCanCastle = true;
+      whiteCanCastle = true;
+      $board.find('.square').removeClass('selected highlight');
+
       this.setState(state);
 
       return this;
@@ -103,6 +110,11 @@
     this.selectSquare = function() {
       var $square = $(this);
       var $selectedSquare = $board.find('.selected.square');
+
+      if ($square.is($selectedSquare)) {
+        $board.find('.square').removeClass('selected highlight');
+        return;
+      }
 
       if ($selectedSquare.length) {
         self.movePiece($selectedSquare, $square);

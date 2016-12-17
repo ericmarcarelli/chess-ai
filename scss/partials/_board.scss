@@ -16,6 +16,7 @@
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center;
+    cursor: pointer;
     &.white {
       background-color: white;
     }
@@ -37,9 +38,9 @@
       }
     }
 
-    &.selected {
+    &.selected, &:hover {
       position: relative;
-      &::after {
+      &::before {
         position: absolute;
         top: 0;
         left: 0;
@@ -47,6 +48,7 @@
         bottom: 0;
         content: ' ';
         border: 5px solid yellow;
+        z-index: 10;
       }
     }
 

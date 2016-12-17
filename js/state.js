@@ -37,6 +37,7 @@
 
         case P.BlackKing:
         case P.WhiteKing:
+
           break;
 
         case P.BlackPawn:
@@ -68,6 +69,9 @@
           }
           break;
       }
+
+      // check list for check
+
       return moves;
     };
 

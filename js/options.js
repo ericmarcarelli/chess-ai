@@ -8,9 +8,13 @@
         ChessAI.LoadedModules.Board.rotateBoard();
       });
 
+      $('.options .reset').click(function() {
+        ChessAI.LoadedModules.Board.setupBoard();
+        $('.options .cancel-move').prop('disabled', true);
+      });
+
       $('.options .cancel-move').click(function() {
-        $('.board .square').removeClass('selected');
-        $('.board .square').removeClass('highlight');
+        $('.board .square').removeClass('selected highlight');
         $(this).prop('disabled', true);
       });
 
