@@ -42,18 +42,13 @@
 
         case P.BlackKing:
         case P.WhiteKing:
-          // for(var i = 0; i < 2; i++) {
-          //   for(var j = 0; j < 2; j++) {
-          //     if (isEmptyOrCanCapture(piece, [row+dir,col])) {
-          //
-          //     }
-          //   }
-          // }
-          // if (col > 0) {
-          //   if (row > 0) {
-          //     if (isEmptyOrCanCapture(piece, [row+dir,col]))
-          //   }
-          // }
+          for(var i = -1; i < 2; i++) {
+            for(var j = -1; j < 2; j++) {
+              if (validMove(piece, state, row+i, col+j)) {
+                moves.push(new ChessAI.Move(piece, row, col, row+i, col+j));
+              }
+            }
+          }
           break;
 
         case P.BlackPawn:
@@ -112,15 +107,26 @@
     };
 
     /**
-     * Determine if the attacker can enter a space by simple movement or capture
-     * @param  {ChessAI.Piece} attacker
-     * @param  {ChessAI.Piece} target
+     * Checks if a potential move by a piece in a state is valid.
+     * This function is not intended for pawns.
+     * @todo check
+     *
+     * @param  {ChessAI.Piece} piece
+     * @param  {ChessAI.State} state
+     * @param  {int} row
+     * @param  {int} col
      * @return {bool}
      */
-    var isEmptyOrCanCapture = function(attacker, target) {
-      return (target == P.Empty || self.canCapture(attacker, target));
-    };
-
+    var validMove = function(piece, state, row, col) {
+      // piece does not actually move
+      if (row == 0 && col == 0)
+        return false;
+      // piece would move off board
+      if (row < 0 || col < 0 || row > 7 || col > 7)
+        return false;
+      var target = state[row][col];
+      return (target == P.Empty || canCapture(piece, target));
+    }
 
     return this.init();
   };
