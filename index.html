@@ -25,7 +25,7 @@
               for (var i = 0; i < 8; i++) {
                 var white = (i%2 === 0);
                 for (var j = 0; j < 8; j++) {
-                  document.writeln('<div class="square ' + String.fromCharCode(97 + j) + (8-i) + ' square_' + i + 'x' + j + ' ' + (white ? 'white' : 'black') + '" data-piece="0"></div>');
+                  document.writeln('<div class="square ' + String.fromCharCode(97 + j) + (8-i) + ' square_' + i + 'x' + j + ' ' + (white ? 'white' : 'black') + '" data-piece="0" data-row="'+i+'" data-col="'+j+'"></div>');
                   white = !white;
                 }
               }
