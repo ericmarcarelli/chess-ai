@@ -9,6 +9,7 @@
 
     this.init = function() {
       self.setupBoard();
+      // self.setupTestPosition();
       self.getState();
       self.setupPieceEvents();
 
@@ -29,6 +30,31 @@
         [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
         [P.WhitePawn, P.WhitePawn, P.WhitePawn, P.WhitePawn, P.WhitePawn, P.WhitePawn, P.WhitePawn, P.WhitePawn],
         [P.WhiteRook, P.WhiteKnight, P.WhiteBishop, P.WhiteQueen, P.WhiteKing, P.WhiteBishop, P.WhiteKnight, P.WhiteRook]
+      ];
+
+      blackCanCastle = true;
+      whiteCanCastle = true;
+      $board.find('.square').removeClass('selected highlight');
+
+      this.setState(state);
+
+      return this;
+    };
+
+    /**
+     * Setup simple board config for testing
+     * @return {ChessAI.Modules.Board}
+     */
+    this.setupTestPosition = function() {
+      var state = [
+        [P.BlackKnight, P.BlackQueen, P.BlackKing, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.BlackPawn, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.Empty, P.Empty, P.Empty, P.BlackRook, P.Empty, P.Empty, P.Empty],
+        [P.WhitePawn, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.WhiteKnight, P.Empty, P.WhiteQueen, P.WhiteKing, P.Empty, P.Empty, P.Empty]
       ];
 
       blackCanCastle = true;

@@ -19,10 +19,12 @@
      * @return {Array} moves
      */
     this.getMovesForSquare = function(state, row, col) {
-      var moves = [];
+      var moves = [], ret = [];
       var piece = state[row][col];
       var directions = [];
       var moveType;
+      var color = ChessAI.Color.getFromPiece(piece);
+      var testState;
 
       switch(piece) {
         case P.BlackQueen:
@@ -106,11 +108,54 @@
           break;
       }
 
-      return moves;
+      // weed out moves resulting in check
+      for (var i = 0; i < moves.length; i++) {
+        testState = ChessAI.Lib.copy(state);
+        testState[moves[i].endRow][moves[i].endCol] = testState[moves[i].startRow][moves[i].startCol];
+        testState[moves[i].startRow][moves[i].startCol] = P.Empty;
+        if (!self.inCheck(testState, ChessAI.Color.getFromPiece(piece))) {
+          ret.push(moves[i]);
+        }
+        else {
+          console.log('check found');
+        }
+      }
+
+      return ret;
     };
+
+
+    /**
+     * Get all legal states for the specified player.
+     *
+     * @param  {Array} state  8x8 array of board
+     * @param  {ChessAI.Color} color
+     * @return {Array} States
+     */
+    this.getAllStates = function(state, color) {
+      var states = [];
+      var moves;
+
+      for(var i = 0; i < 8; i++) {
+        for(var j = 0; j < 8; j++) {
+          if (ChessAI.Color.getFromPiece(state[i][j]) == color) {
+            moves = self.getMovesForSquare(state, i, j);
+          }
+          for(var k = 0; k < moves.length; k++) {
+            var newState = ChessAI.Lib.copy(state);
+            newState[moves[k].endRow][moves[k].endCol] = newState[moves[k].startRow][moves[k].startCol];
+            newState[moves[k].startRow][moves[k].startCol] = P.Empty;
+            states.push(new ChessAI.State(newState, 0));
+          }
+        }
+      }
+
+      return states;
+    }
 
     /**
      * Determine if the attacker can capture the target piece.
+     *
      * @param  {ChessAI.Piece} attacker
      * @param  {ChessAI.Piece} target
      * @return {bool}
@@ -119,10 +164,8 @@
       if (!attacker)
         return false;
 
-      if (attacker < P.WhiteRook && target > P.BlackPawn && target != P.WhiteKing) {
-        return true;
-      }
-      if (attacker > P.BlackPawn && target < P.WhiteRook && target != P.BlackKing) {
+      if (ChessAI.Color.getFromPiece(attacker) !=  ChessAI.Color.getFromPiece(target)
+          && target != P.WhiteKing && target != P.BlackKing) {
         return true;
       }
 
@@ -150,6 +193,118 @@
       if (canCapture(piece, target))
         return MoveType.Capture;
       return MoveType.Invalid;
+    }
+
+    /**
+     * Check if the king of the specified player is in check.
+     * The technique is similar to finding all moves for all pieces,
+     * with some efficiencies.
+     * @todo More rules can be added to avoid testing impossible threats
+     *
+     * @param  {Array} state  8x8 array of board
+     * @param  {ChessAI.Color} color
+     *
+     * @return {bool}
+     */
+    this.inCheck = function(state, color) {
+      var king = (color == ChessAI.Color.White) ? P.WhiteKing : P.BlackKing;
+      var kingPosition = null;
+
+      for(var i = 0; i < 8; i++) {
+        for(var j = 0; j < 8; j++) {
+          if (state[i][j] == king) {
+            kingPosition = [i, j];
+            break;
+          }
+        }
+        if (kingPosition)
+          break;
+      }
+
+      var piece;
+      var directions = [];
+      var moveType;
+
+      for(var row = 0; row < 8; row++) {
+        for(var col = 0; col < 8; col++) {
+          piece = state[row][col];
+          if (piece == P.Empty || ChessAI.Color.getFromPiece(piece) == color) {
+            continue;
+          }
+          switch(piece) {
+            case P.BlackQueen:
+            case P.WhiteQueen:
+
+            case P.WhiteBishop:
+            case P.BlackBishop:
+              directions = [[-1,-1], [-1,1], [1,1], [1,-1]];
+
+            case P.WhiteRook:
+            case P.BlackRook:
+              if (piece != P.WhiteBishop && piece != P.BlackBishop) {
+                directions = directions.concat([[-1,0], [0,-1], [1,0], [0,1]]);
+              }
+
+              for(var i = 0; i < directions.length; i++) {
+                for(var j = 1; j < 8; j++) {
+                  moveType = validMove(piece, state, row + (directions[i][0] * j), col + (directions[i][1] * j));
+                  if (samePosition(kingPosition, [row + (directions[i][0] * j), col + (directions[i][1] * j)])) {
+                    return true;
+                  }
+                  if (moveType != MoveType.Move) {
+                    break;
+                  }
+                }
+              }
+
+              break;
+
+            case P.BlackKnight:
+            case P.WhiteKnight:
+              var offsets = [[-2,1], [-1,2], [1,2], [2,1], [2,-1], [1,-2], [-1,-2], [-2,-1]];
+              for(var i = 0; i < offsets.length; i++) {
+                if (samePosition(kingPosition, [row + offsets[i][0], col + offsets[i][1]])) {
+                  return true;
+                }
+              }
+              break;
+
+            case P.BlackKing:
+            case P.WhiteKing:
+              for(var i = -1; i < 2; i++) {
+                for(var j = -1; j < 2; j++) {
+                  if (i == 0 && i == 0)
+                    continue;
+                  if (samePosition(kingPosition, [row + i, col + j])) {
+                    return true;
+                  }
+                }
+              }
+              break;
+
+            case P.BlackPawn:
+            case P.WhitePawn:
+              var dir = piece == P.BlackPawn ? 1 : -1;
+              if (col > 0) {
+                if (samePosition(kingPosition, [row+dir, col-1])) {
+                  return true;
+                }
+              }
+              if (col < 7) {
+                if (samePosition(kingPosition, [row+dir, col+1])) {
+                  return true;
+                }
+              }
+              break;
+          }
+        }
+      }
+
+      return false;
+    }
+
+    var samePosition = function(a, b) {
+      return a[0] == b[0] && a[1] == b[1];
     }
 
     return this.init();

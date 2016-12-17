@@ -11,9 +11,28 @@ var ChessAI = {
     WhiteBishop : 9, WhiteKing : 10, WhiteQueen : 11, WhitePawn : 12
   },
 
-  State: {
-    board : [],
-    rating : 0,
+  Color: {
+    Empty : 0,
+    Black : 1,
+    White : 2,
+    getFromPiece : function(piece) {
+      if (piece == 0)
+        return 0;
+      if (piece < 7)
+        return 1;
+      return 2;
+    },
+    flipColor : function(color) {
+      if (color == 1) return 2;
+      return 1;
+    }
+  },
+
+  State: function(board, rating){
+    this.board = board !== undefined ? board : [];
+    this.rating = rating !== undefined ? rating : 0;
+    this.moves = [];
+    return this;
   },
 
   Move: function(piece, startRow, startCol, endRow, endCol) {
@@ -41,7 +60,7 @@ ChessAI.Lib.copy = function(o) {
   out = Array.isArray(o) ? [] : {};
   for (key in o) {
     v = o[key];
-    out[key] = (typeof v === "object") ? copy(v) : v;
+    out[key] = (typeof v === "object") ? ChessAI.Lib.copy(v) : v;
   }
   return out;
 };
