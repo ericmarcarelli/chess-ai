@@ -135,7 +135,7 @@
         $('.options .cancel-move').prop('disabled', false);
         var moves = ChessAI.LoadedModules.States.getMovesForSquare(self.getState(), $square.data('row'), $square.data('col'));
         for (var i = 0; i < moves.length; i++) {
-          $board.find(squareClass(moves[i][0], moves[i][1])).addClass('highlight');
+          $board.find(squareClass(moves[i].endRow, moves[i].endCol)).addClass('highlight');
         }
       }
     };
