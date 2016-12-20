@@ -116,9 +116,6 @@
         if (!self.inCheck(testState, ChessAI.Color.getFromPiece(piece))) {
           ret.push(moves[i]);
         }
-        else {
-          console.log('check found');
-        }
       }
 
       return ret;

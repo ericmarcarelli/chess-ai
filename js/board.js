@@ -8,8 +8,8 @@
     var whiteCanCastle = true;
 
     this.init = function() {
-      self.setupBoard();
-      // self.setupTestPosition();
+      // self.setupBoard();
+      self.setupTestPosition();
       self.getState();
       self.setupPieceEvents();
 
@@ -143,7 +143,12 @@
       }
 
       if ($selectedSquare.length) {
-        self.movePiece($selectedSquare, $square);
+        if (!ChessAI.LoadedModules.Options.isConstrainedToLegalMoves() || $square.hasClass('highlight')) {
+          self.movePiece($selectedSquare, $square);
+        }
+        else {
+          $board.find('.square').removeClass('selected highlight');
+        }
       }
       else {
         self.selectPiece($square);

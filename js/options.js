@@ -1,7 +1,6 @@
 (function($) {
   ChessAI.Modules.Options = function() {
     var self = this;
-    var $options = $('.options');
 
     this.init = function() {
       $('.options .rotate').click(function() {
@@ -20,6 +19,13 @@
 
       return this;
     };
+
+    this.isConstrainedToLegalMoves = function() {
+      if ($('#constrain-legal:checked').length) {
+        return true;
+      }
+      return false;
+    }
 
     return this.init();
   };
