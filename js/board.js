@@ -8,11 +8,12 @@
     var whiteCanCastle = true;
 
     this.init = function() {
-      // self.setupBoard();
-      self.setupTestPosition();
+      self.setupBoard();
+      // self.setupTestPosition();
       self.getState();
       self.setupPieceEvents();
-
+      // ChessAI.LoadedModules.States.getBestMove(new ChessAI.State(self.getState()), ChessAI.Color.Black, ChessAI.Color.Black, 3);
+      
       return this;
     };
 

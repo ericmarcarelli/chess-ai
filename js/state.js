@@ -8,6 +8,35 @@
       return this;
     };
 
+    this.getBestMove = function(state, startColor, currColor, ply) {
+    	var best = new ChessAI.State(), nextBest = null;
+      var nextColor = ChessAI.Color.flipColor(currColor);
+      var moves = this.getAllStates(state.board, currColor);
+
+      // console.log('search: ply ' + ply + ' with ' + moves.length + ' moves');
+
+      for(var i = 0; i < moves.length; i++) {
+        if (ply > 0) {
+          nextBest = this.getBestMove(moves[i], startColor, nextColor, ply - 1);
+          // console.log('ply ' + (ply-1) + ' returned rating ' + nextBest.rating);
+          moves[i].rating = nextBest.rating;
+        }
+        else {
+          moves[i].rating = 0; // @todo getRating()
+        }
+
+        if (i == 0 || moves[i].rating > best.rating) {
+          // console.log('set best on ' + ply);
+          best = moves[i];
+        }
+      }
+
+      // console.log('returning best: ' + best.rating);
+
+    	return best;
+
+    };
+
     /**
      * Get array of legal moves for a square.
      * @todo currently missing moves such as castling and en passant capture
@@ -137,6 +166,9 @@
         for(var j = 0; j < 8; j++) {
           if (ChessAI.Color.getFromPiece(state[i][j]) == color) {
             moves = self.getMovesForSquare(state, i, j);
+          }
+          else {
+            moves = [];
           }
           for(var k = 0; k < moves.length; k++) {
             var newState = ChessAI.Lib.copy(state);
