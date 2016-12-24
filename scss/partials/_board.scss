@@ -1,4 +1,14 @@
 .board-container {
+  position: relative;
+  @include clearfix;
+  .loading {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    @include translate(-50%, -50%);
+    z-index: 10000;
+  }
 }
 
 .board {
@@ -6,7 +16,6 @@
   max-width: 768px;
   width: 100%;
   height: 0;
-  padding-bottom: 100%;
 
   .square {
     margin: 0;

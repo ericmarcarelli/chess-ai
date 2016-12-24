@@ -21,6 +21,10 @@
       return this;
     };
 
+    /**
+     * If true, do not allow illegal moves.
+     * @return {bool}
+     */
     this.isConstrainedToLegalMoves = function() {
       if ($('#constrain-legal:checked').length) {
         return true;
@@ -28,7 +32,11 @@
       return false;
     }
 
-    this.getSearchPlies = function() {
+    /**
+     * Return max search plies
+     * @return {int}
+     */
+    this.getMaxPlies = function() {
       return parseInt($('#plies').val());
     }
 

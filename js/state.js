@@ -8,6 +8,15 @@
       return this;
     };
 
+    /**
+     * Construct and search game tree to select the best available move.
+     *
+     * @param  {ChessAI.State} state
+     * @param  {ChessAI.Color} startColor
+     * @param  {ChessAI.Color} currColor
+     * @param  {int} ply
+     * @return {ChessAI.Move}
+     */
     this.getBestMove = function(state, startColor, currColor, ply) {
     	var best = new ChessAI.State(), nextBest = null;
       var nextColor = ChessAI.Color.flipColor(currColor);

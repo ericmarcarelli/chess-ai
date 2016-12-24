@@ -185,13 +185,23 @@
       $('.options .cancel-move').prop('disabled', true);
       turn = ChessAI.Color.flipColor(turn);
       if (turn != ChessAI.LoadedModules.Options.playerColor) {
-        self.makeMoveForColor(turn);
+        $('.loading').show('fast');
+        setTimeout(function() {
+          self.makeMoveForColor(turn);
+          $('.loading').hide('fast');
+        }, 300);
       }
     };
 
 
     this.makeMoveForColor = function(color) {
-
+      var startTime = new Date() / 1000;
+      var move = ChessAI.LoadedModules.States.getBestMove(
+        new ChessAI.State(self.getState()), color, color, ChessAI.LoadedModules.Options.getMaxPlies());
+      console.log(move);
+      self.setState(move.board);
+      turn = ChessAI.Color.flipColor(turn);
+      console.log('Found move in ' + Math.floor((new Date() / 1000) - startTime) + ' seconds');
     };
 
     /**
