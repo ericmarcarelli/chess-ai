@@ -37,7 +37,7 @@
      * @return {int}
      */
     this.getMaxPlies = function() {
-      return parseInt($('#plies').val());
+      return parseInt($('#plies').val()) - 1;
     }
 
     return this.init();

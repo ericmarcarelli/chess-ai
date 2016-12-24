@@ -2,7 +2,18 @@
   ChessAI.Modules.States = function() {
     var self = this;
     var P = ChessAI.Piece;
-    var MoveType = { Invalid : 0, Move : 1, Capture : 2};
+    var MoveType = { Invalid : 0, Move : 1, Capture : 2 };
+
+    // Piece values are based on generally accepted relative values of the pieces.
+    var PieceValue = [];
+    PieceValue[P.Empty] = 0;
+    PieceValue[P.BlackPawn] = PieceValue[P.WhitePawn] = 100;
+    PieceValue[P.BlackKnight] = PieceValue[P.WhiteKnight] = 300;
+    PieceValue[P.BlackBishop] = PieceValue[P.WhiteBishop] = 300;
+    PieceValue[P.BlackRook] = PieceValue[P.WhiteRook] = 500;
+    PieceValue[P.BlackKing] = PieceValue[P.WhiteKing] = 400;
+    PieceValue[P.BlackQueen] = PieceValue[P.WhiteQueen] = 900;
+    var CheckMateRating = -1000000;
 
     this.init = function() {
       return this;
@@ -31,7 +42,7 @@
           moves[i].rating = nextBest.rating;
         }
         else {
-          moves[i].rating = 0; // @todo getRating()
+          rateState(moves[i], currColor);
         }
 
         if (i == 0 || moves[i].rating > best.rating) {
@@ -190,6 +201,30 @@
 
       return states;
     }
+
+    /**
+     * Calculates rating for a state from color's perspective.
+     * @param  {ChessAI.State} state
+     * @param  {ChessAI.Color} color
+     */
+    var rateState = function(state, color) {
+      var mult = [];
+      mult[color] = 1;
+      mult[ChessAI.Color.flipColor(color)] = -1;
+
+      for(var i = 0; i < 8; i++) {
+        for(var j = 0; j < 8; j++) {
+          if (state.board[i][j] != P.Empty) {
+            // console.log((mult[ChessAI.Color.getFromPiece(state.board[i][j])] * PieceValue[state.board[i][j]]),
+            // state.board[i][j],
+            // ChessAI.Color.getFromPiece(state.board[i][j]),
+            // mult[ChessAI.Color.getFromPiece(state.board[i][j])],
+            // PieceValue[state.board[i][j]]);
+            state.rating += (mult[ChessAI.Color.getFromPiece(state.board[i][j])] * PieceValue[state.board[i][j]]);
+          }
+        }
+      }
+    };
 
     /**
      * Determine if the attacker can capture the target piece.
