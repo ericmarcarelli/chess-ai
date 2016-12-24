@@ -29,9 +29,9 @@
      * @return {ChessAI.Move}
      */
     this.getBestMove = function(state, startColor, currColor, ply) {
-    	var best = new ChessAI.State(), nextBest = null;
+    	var best = new ChessAI.State(), nextBest = null, tempRating = 0;
       var nextColor = ChessAI.Color.flipColor(currColor);
-      var moves = this.getAllStates(state.board, currColor);
+      var moves = this.getAllStates(state.board, currColor, ply == 1);
 
       // console.log('search: ply ' + ply + ' with ' + moves.length + ' moves');
 
@@ -39,7 +39,7 @@
         if (ply > 0) {
           nextBest = this.getBestMove(moves[i], startColor, nextColor, ply - 1);
           // console.log('ply ' + (ply-1) + ' returned rating ' + nextBest.rating);
-          moves[i].rating = nextBest.rating;
+          moves[i].rating = -nextBest.rating;
         }
         else {
           rateState(moves[i], currColor);
@@ -176,11 +176,12 @@
      *
      * @param  {Array} state  8x8 array of board
      * @param  {ChessAI.Color} color
+     * @param  {bool} limitToCurrBest - if true, do not add states that aren't
+     *                                  better than the current best rating
      * @return {Array} States
      */
-    this.getAllStates = function(state, color) {
-      var states = [];
-      var moves;
+    this.getAllStates = function(state, color, limitToCurrBest) {
+      var states = [], moves, currBest = CheckMateRating;
 
       for(var i = 0; i < 8; i++) {
         for(var j = 0; j < 8; j++) {
@@ -194,7 +195,18 @@
             var newState = ChessAI.Lib.copy(state);
             newState[moves[k].endRow][moves[k].endCol] = newState[moves[k].startRow][moves[k].startCol];
             newState[moves[k].startRow][moves[k].startCol] = P.Empty;
-            states.push(new ChessAI.State(newState, 0));
+
+            var s = new ChessAI.State(newState, 0);
+            if (limitToCurrBest) {
+              rateState(s, color);
+              if (s.rating > currBest) {
+                currBest = s.rating;
+              }
+              else {
+                continue;
+              }
+            }
+            states.push(s);
           }
         }
       }

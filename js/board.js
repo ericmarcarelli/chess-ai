@@ -193,7 +193,10 @@
       }
     };
 
-
+    /**
+     * Make a move for the computer player
+     * @param  {ChessAI.Color} color 
+     */
     this.makeMoveForColor = function(color) {
       var startTime = new Date() / 1000;
       var move = ChessAI.LoadedModules.States.getBestMove(
