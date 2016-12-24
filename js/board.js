@@ -6,14 +6,14 @@
     var P = ChessAI.Piece;
     var blackCanCastle = true;
     var whiteCanCastle = true;
+    var turn = ChessAI.Color.White;
 
     this.init = function() {
       self.setupBoard();
       // self.setupTestPosition();
       self.getState();
       self.setupPieceEvents();
-      // ChessAI.LoadedModules.States.getBestMove(new ChessAI.State(self.getState()), ChessAI.Color.Black, ChessAI.Color.Black, 3);
-      
+
       return this;
     };
 
@@ -151,7 +151,7 @@
           $board.find('.square').removeClass('selected highlight');
         }
       }
-      else {
+      else if (!ChessAI.LoadedModules.Options.isConstrainedToLegalMoves() || turn == ChessAI.LoadedModules.Options.playerColor) {
         self.selectPiece($square);
       }
     };
@@ -183,6 +183,15 @@
       $board.find('.square').removeClass('selected');
       $board.find('.square').removeClass('highlight');
       $('.options .cancel-move').prop('disabled', true);
+      turn = ChessAI.Color.flipColor(turn);
+      if (turn != ChessAI.LoadedModules.Options.playerColor) {
+        self.makeMoveForColor(turn);
+      }
+    };
+
+
+    this.makeMoveForColor = function(color) {
+
     };
 
     /**

@@ -1,6 +1,7 @@
 (function($) {
   ChessAI.Modules.Options = function() {
     var self = this;
+    this.playerColor = ChessAI.Color.White;
 
     this.init = function() {
       $('.options .rotate').click(function() {
@@ -25,6 +26,10 @@
         return true;
       }
       return false;
+    }
+
+    this.getSearchPlies = function() {
+      return parseInt($('#plies').val());
     }
 
     return this.init();
