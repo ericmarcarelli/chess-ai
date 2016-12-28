@@ -13,7 +13,9 @@
     PieceValue[P.BlackRook] = PieceValue[P.WhiteRook] = 500;
     PieceValue[P.BlackKing] = PieceValue[P.WhiteKing] = 400;
     PieceValue[P.BlackQueen] = PieceValue[P.WhiteQueen] = 900;
-    var CheckmateRating = -1000000;
+
+    this.CheckmateRating = -1000000;
+    this.DrawRating = -100000;
 
     this.init = function() {
       return this;
@@ -36,7 +38,7 @@
       // console.log('search: ply ' + ply + ' with ' + moves.length + ' moves');
 
       if (moves.length == 0) {
-        best.rating = CheckmateRating;
+        best.rating = self.inCheck(state.board, currColor) ? self.CheckmateRating : self.DrawRating;
       }
 
       for(var i = 0; i < moves.length; i++) {
@@ -185,7 +187,7 @@
      * @return {Array} States
      */
     this.getAllStates = function(state, color, limitToCurrBest) {
-      var states = [], moves, currBest = CheckmateRating;
+      var states = [], moves, currBest = self.CheckmateRating;
 
       for(var i = 0; i < 8; i++) {
         for(var j = 0; j < 8; j++) {

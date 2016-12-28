@@ -192,7 +192,12 @@
 
           var moves = ChessAI.LoadedModules.States.getAllStates(self.getState(), turn, false);
           if (moves.length == 0) {
-            self.showMessage('Checkmate! Computer&nbsp;player&nbsp;wins.');
+            if (ChessAI.LoadedModules.States.inCheck(self.getState(), turn)) {
+              self.showMessage('Checkmate! Computer&nbsp;player&nbsp;wins.');
+            }
+            else {
+              self.showMessage('Draw!');
+            }
           }
           else {
             self.hideMessage();
@@ -212,6 +217,9 @@
       console.log(move);
       if (move.rating == ChessAI.LoadedModules.States.CheckmateRating) {
         self.showMessage('Checkmate! Human&nbsp;player&nbsp;wins.');
+      }
+      else if (move.rating == ChessAI.LoadedModules.States.DrawRating) {
+        self.showMessage('Draw!');
       }
       else {
         self.setState(move.board);
