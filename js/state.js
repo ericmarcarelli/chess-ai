@@ -13,7 +13,7 @@
     PieceValue[P.BlackRook] = PieceValue[P.WhiteRook] = 500;
     PieceValue[P.BlackKing] = PieceValue[P.WhiteKing] = 400;
     PieceValue[P.BlackQueen] = PieceValue[P.WhiteQueen] = 900;
-    var CheckMateRating = -1000000;
+    var CheckmateRating = -1000000;
 
     this.init = function() {
       return this;
@@ -34,6 +34,10 @@
       var moves = this.getAllStates(state.board, currColor, ply == 1);
 
       // console.log('search: ply ' + ply + ' with ' + moves.length + ' moves');
+
+      if (moves.length == 0) {
+        best.rating = CheckmateRating;
+      }
 
       for(var i = 0; i < moves.length; i++) {
         if (ply > 0) {
@@ -118,7 +122,7 @@
         case P.WhiteKing:
           for(var i = -1; i < 2; i++) {
             for(var j = -1; j < 2; j++) {
-              if (i == 0 && i == 0)
+              if (i == 0 && j == 0)
                 continue;
               if (validMove(piece, state, row + i, col + j) != MoveType.Invalid) {
                 moves.push(new ChessAI.Move(piece, row, col, row + i, col + j));
@@ -181,7 +185,7 @@
      * @return {Array} States
      */
     this.getAllStates = function(state, color, limitToCurrBest) {
-      var states = [], moves, currBest = CheckMateRating;
+      var states = [], moves, currBest = CheckmateRating;
 
       for(var i = 0; i < 8; i++) {
         for(var j = 0; j < 8; j++) {
@@ -364,7 +368,7 @@
             case P.WhiteKing:
               for(var i = -1; i < 2; i++) {
                 for(var j = -1; j < 2; j++) {
-                  if (i == 0 && i == 0)
+                  if (i == 0 && j == 0)
                     continue;
                   if (samePosition(kingPosition, [row + i, col + j])) {
                     return true;

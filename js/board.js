@@ -38,6 +38,7 @@
       $board.find('.square').removeClass('selected highlight');
 
       this.setState(state);
+      this.hideMessage();
 
       return this;
     };
@@ -49,11 +50,11 @@
     this.setupTestPosition = function() {
       var state = [
         [P.BlackKnight, P.BlackQueen, P.BlackKing, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
-        [P.BlackPawn, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.BlackPawn, P.BlackRook, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
         [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
         [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
         [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
-        [P.Empty, P.Empty, P.Empty, P.Empty, P.BlackRook, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
         [P.WhitePawn, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
         [P.Empty, P.WhiteKnight, P.Empty, P.WhiteQueen, P.WhiteKing, P.Empty, P.Empty, P.Empty]
       ];
@@ -185,27 +186,55 @@
       $('.options .cancel-move').prop('disabled', true);
       turn = ChessAI.Color.flipColor(turn);
       if (turn != ChessAI.LoadedModules.Options.playerColor) {
-        $('.loading').show('fast');
+        self.showMessage('Calculating&nbsp;Move...');
         setTimeout(function() {
           self.makeMoveForColor(turn);
-          $('.loading').hide('fast');
+
+          var moves = ChessAI.LoadedModules.States.getAllStates(self.getState(), turn, false);
+          if (moves.length == 0) {
+            self.showMessage('Checkmate! Computer&nbsp;player&nbsp;wins.');
+          }
+          else {
+            self.hideMessage();
+          }
         }, 300);
       }
     };
 
     /**
      * Make a move for the computer player
-     * @param  {ChessAI.Color} color 
+     * @param  {ChessAI.Color} color
      */
     this.makeMoveForColor = function(color) {
       var startTime = new Date() / 1000;
       var move = ChessAI.LoadedModules.States.getBestMove(
         new ChessAI.State(self.getState()), color, color, ChessAI.LoadedModules.Options.getMaxPlies());
       console.log(move);
-      self.setState(move.board);
-      turn = ChessAI.Color.flipColor(turn);
-      console.log('Found move in ' + Math.floor((new Date() / 1000) - startTime) + ' seconds');
+      if (move.rating == ChessAI.LoadedModules.States.CheckmateRating) {
+        self.showMessage('Checkmate! Human&nbsp;player&nbsp;wins.');
+      }
+      else {
+        self.setState(move.board);
+        turn = ChessAI.Color.flipColor(turn);
+        console.log('Found move in ' + Math.floor((new Date() / 1000) - startTime) + ' seconds');
+      }
     };
+
+    /**
+     * Show a message.
+     * @param  {String} msg
+     */
+    this.showMessage = function(msg) {
+      $('.message').html(msg);
+      $('.message').show('fast');
+    }
+
+    /**
+     * Hide the message box.
+     */
+    this.hideMessage = function(msg) {
+      $('.message').hide('fast');
+    }
 
     /**
      * Get piece from a square
