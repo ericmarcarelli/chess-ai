@@ -7,7 +7,7 @@
     // Piece values are based on generally accepted relative values of the pieces.
     var PieceValue = [];
     PieceValue[P.Empty] = 0;
-    PieceValue[P.BlackPawn] = PieceValue[P.WhitePawn] = 100;
+    PieceValue[P.BlackPawn] = PieceValue[P.WhitePawn] = 75;
     PieceValue[P.BlackKnight] = PieceValue[P.WhiteKnight] = 300;
     PieceValue[P.BlackBishop] = PieceValue[P.WhiteBishop] = 300;
     PieceValue[P.BlackRook] = PieceValue[P.WhiteRook] = 500;
@@ -220,19 +220,25 @@
      * @param  {ChessAI.Color} color
      */
     var rateState = function(state, color) {
-      var mult = [];
+      var mult = [], rating = 0;
       mult[color] = 1;
       mult[ChessAI.Color.flipColor(color)] = -1;
 
       for(var i = 0; i < 8; i++) {
         for(var j = 0; j < 8; j++) {
           if (state.board[i][j] != P.Empty) {
-            // console.log((mult[ChessAI.Color.getFromPiece(state.board[i][j])] * PieceValue[state.board[i][j]]),
-            // state.board[i][j],
-            // ChessAI.Color.getFromPiece(state.board[i][j]),
-            // mult[ChessAI.Color.getFromPiece(state.board[i][j])],
-            // PieceValue[state.board[i][j]]);
-            state.rating += (mult[ChessAI.Color.getFromPiece(state.board[i][j])] * PieceValue[state.board[i][j]]);
+            rating = (mult[ChessAI.Color.getFromPiece(state.board[i][j])] * PieceValue[state.board[i][j]]);
+            // increase value if controlling the center
+            if (i > 1 && i < 6 && j > 1 && j < 6) {
+              rating *= 1.2;
+            }
+            if (state.board[i][j] == P.BlackPawn) {
+              rating += i*25;
+            }
+            else if (state.board[i][j] == P.WhitePawn) {
+              rating += (7-i) * 25;
+            }
+            state.rating += rating;
           }
         }
       }
