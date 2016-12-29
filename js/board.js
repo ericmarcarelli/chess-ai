@@ -7,10 +7,11 @@
     var blackCanCastle = true;
     var whiteCanCastle = true;
     var turn = ChessAI.Color.White;
+    var lockMessage = false;
 
     this.init = function() {
-      self.setupBoard();
-      // self.setupTestPosition();
+      // self.setupBoard();
+      self.setupTestPosition();
       self.getState();
       self.setupPieceEvents();
 
@@ -35,6 +36,7 @@
 
       blackCanCastle = true;
       whiteCanCastle = true;
+      lockMessage = false;
       $board.find('.square').removeClass('selected highlight');
 
       this.setState(state);
@@ -50,12 +52,12 @@
     this.setupTestPosition = function() {
       var state = [
         [P.BlackKnight, P.BlackQueen, P.BlackKing, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
-        [P.BlackPawn, P.BlackRook, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.BlackPawn, P.BlackRook, P.Empty, P.Empty, P.Empty, P.WhitePawn, P.Empty, P.Empty],
         [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
         [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
         [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
         [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
-        [P.WhitePawn, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.WhitePawn, P.Empty, P.Empty, P.WhiteQueen, P.Empty, P.Empty, P.BlackPawn, P.Empty],
         [P.Empty, P.WhiteKnight, P.Empty, P.WhiteQueen, P.WhiteKing, P.Empty, P.Empty, P.Empty]
       ];
 
@@ -179,7 +181,14 @@
      * @param  {Object} $square
      */
     this.movePiece = function($selectedSquare, $square) {
-      setPiece($square, getPiece($selectedSquare));
+      var piece = getPiece($selectedSquare);
+      if (piece == P.WhitePawn && parseInt($square.attr('data-row')) == 0) {
+        piece = P.WhiteQueen;
+      }
+      else if (piece == P.BlackPawn && parseInt($square.attr('data-row')) == 7) {
+        piece = P.BlackQueen;
+      }
+      setPiece($square, piece);
       setPiece($selectedSquare, P.Empty);
       $board.find('.square').removeClass('selected');
       $board.find('.square').removeClass('highlight');
@@ -193,7 +202,7 @@
           var moves = ChessAI.LoadedModules.States.getAllStates(self.getState(), turn, false);
           if (moves.length == 0) {
             if (ChessAI.LoadedModules.States.inCheck(self.getState(), turn)) {
-              self.showMessage('Checkmate! Computer&nbsp;player&nbsp;wins.');
+              self.showMessage('Checkmate! Human&nbsp;player&nbsp;wins.');
             }
             else {
               self.showMessage('Draw!');
@@ -217,9 +226,11 @@
       console.log(move);
       if (move.rating == ChessAI.LoadedModules.States.CheckmateRating) {
         self.showMessage('Checkmate! Human&nbsp;player&nbsp;wins.');
+        lockMessage = true;
       }
       else if (move.rating == ChessAI.LoadedModules.States.DrawRating) {
         self.showMessage('Draw!');
+        lockMessage = true;
       }
       else {
         self.setState(move.board);
@@ -241,7 +252,9 @@
      * Hide the message box.
      */
     this.hideMessage = function(msg) {
-      $('.message').hide('fast');
+      if (!lockMessage) {
+        $('.message').hide('fast');
+      }
     }
 
     /**

@@ -142,22 +142,24 @@
           if (row == initialRow && state[row+(dir*2)][col] == P.Empty) {
             moves.push(new ChessAI.Move(piece, row, col, row+(dir*2), col));
           }
-          // regular advance
-          if (state[row+dir][col] == P.Empty) {
-            moves.push(new ChessAI.Move(piece, row, col, row+dir, col));
-          }
-
-          // captures
-          if (col > 0) {
-            if (state[row+dir][col-1] != P.Empty &&
-              canCapture(piece, state[row+dir][col-1])) {
-              moves.push(new ChessAI.Move(piece, row, col, row+dir, col-1));
+          if (row+dir >= 0 && row+dir < 8) {
+            // regular advance
+            if (state[row+dir][col] == P.Empty) {
+              moves.push(new ChessAI.Move(piece, row, col, row+dir, col));
             }
-          }
-          if (col < 7) {
-            if (state[row+dir][col+1] != P.Empty &&
-              canCapture(piece, state[row+dir][col+1])) {
-              moves.push(new ChessAI.Move(piece, row, col, row+dir, col+1));
+
+            // captures
+            if (col > 0) {
+              if (state[row+dir][col-1] != P.Empty &&
+                canCapture(piece, state[row+dir][col-1])) {
+                moves.push(new ChessAI.Move(piece, row, col, row+dir, col-1));
+              }
+            }
+            if (col < 7) {
+              if (state[row+dir][col+1] != P.Empty &&
+                canCapture(piece, state[row+dir][col+1])) {
+                moves.push(new ChessAI.Move(piece, row, col, row+dir, col+1));
+              }
             }
           }
           break;
@@ -201,6 +203,15 @@
             var newState = ChessAI.Lib.copy(state);
             newState[moves[k].endRow][moves[k].endCol] = newState[moves[k].startRow][moves[k].startCol];
             newState[moves[k].startRow][moves[k].startCol] = P.Empty;
+
+            for (var l = 0; l < 8; l++) {
+              if (newState[0][l] == P.WhitePawn) {
+                newState[0][l] = P.WhiteQueen;
+              }
+              else if (newState[0][l] == P.BlackPawn) {
+                newState[0][l] = P.BlackQueen;
+              }
+            }
 
             var s = new ChessAI.State(newState, 0);
             if (limitToCurrBest) {
