@@ -7,11 +7,10 @@
     var blackCanCastle = true;
     var whiteCanCastle = true;
     var turn = ChessAI.Color.White;
-    var lockMessage = false;
 
     this.init = function() {
-      // self.setupBoard();
-      self.setupTestPosition();
+      self.setupBoard();
+      // self.setupTestPosition();
       self.getState();
       self.setupPieceEvents();
 
@@ -36,7 +35,6 @@
 
       blackCanCastle = true;
       whiteCanCastle = true;
-      lockMessage = false;
       $board.find('.square').removeClass('selected highlight');
 
       this.setState(state);
@@ -60,16 +58,7 @@
         [P.WhitePawn, P.Empty, P.Empty, P.WhiteQueen, P.Empty, P.Empty, P.BlackPawn, P.Empty],
         [P.Empty, P.WhiteKnight, P.Empty, P.WhiteQueen, P.WhiteKing, P.Empty, P.Empty, P.Empty]
       ];
-      state = [
-        [P.Empty, P.Empty, P.BlackKing, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
-        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
-        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
-        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
-        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
-        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
-        [P.WhitePawn, P.Empty, P.Empty, P.WhiteQueen, P.Empty, P.Empty, P.BlackPawn, P.Empty],
-        [P.Empty, P.WhiteKnight, P.Empty, P.WhiteQueen, P.WhiteKing, P.Empty, P.Empty, P.Empty]
-      ];
+
       blackCanCastle = true;
       whiteCanCastle = true;
       $board.find('.square').removeClass('selected highlight');
@@ -244,7 +233,6 @@
         else {
           self.showMessage('Draw!');
         }
-
         return true;
       }
 
@@ -264,9 +252,7 @@
      * Hide the message box.
      */
     this.hideMessage = function(msg) {
-      if (!lockMessage) {
-        $('.message').hide('fast');
-      }
+      $('.message').hide('fast');
     }
 
     /**

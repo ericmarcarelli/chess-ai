@@ -336,6 +336,7 @@
       for(var row = 0; row < 8; row++) {
         for(var col = 0; col < 8; col++) {
           piece = state[row][col];
+          directions = [];
           if (piece == P.Empty || ChessAI.Color.getFromPiece(piece) == color) {
             continue;
           }
