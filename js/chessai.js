@@ -25,7 +25,12 @@ var ChessAI = {
     flipColor : function(color) {
       if (color == 1) return 2;
       return 1;
+    },
+    getName : function(color) {
+      if (color == 1) return 'Black';
+      return 'White';
     }
+
   },
 
   State: function(board, rating){

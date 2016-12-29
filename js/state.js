@@ -208,8 +208,8 @@
               if (newState[0][l] == P.WhitePawn) {
                 newState[0][l] = P.WhiteQueen;
               }
-              else if (newState[0][l] == P.BlackPawn) {
-                newState[0][l] = P.BlackQueen;
+              else if (newState[7][l] == P.BlackPawn) {
+                newState[7][l] = P.BlackQueen;
               }
             }
 

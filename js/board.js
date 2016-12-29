@@ -60,7 +60,16 @@
         [P.WhitePawn, P.Empty, P.Empty, P.WhiteQueen, P.Empty, P.Empty, P.BlackPawn, P.Empty],
         [P.Empty, P.WhiteKnight, P.Empty, P.WhiteQueen, P.WhiteKing, P.Empty, P.Empty, P.Empty]
       ];
-
+      state = [
+        [P.Empty, P.Empty, P.BlackKing, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty, P.Empty],
+        [P.WhitePawn, P.Empty, P.Empty, P.WhiteQueen, P.Empty, P.Empty, P.BlackPawn, P.Empty],
+        [P.Empty, P.WhiteKnight, P.Empty, P.WhiteQueen, P.WhiteKing, P.Empty, P.Empty, P.Empty]
+      ];
       blackCanCastle = true;
       whiteCanCastle = true;
       $board.find('.square').removeClass('selected highlight');
@@ -199,16 +208,7 @@
         setTimeout(function() {
           self.makeMoveForColor(turn);
 
-          var moves = ChessAI.LoadedModules.States.getAllStates(self.getState(), turn, false);
-          if (moves.length == 0) {
-            if (ChessAI.LoadedModules.States.inCheck(self.getState(), turn)) {
-              self.showMessage('Checkmate! Human&nbsp;player&nbsp;wins.');
-            }
-            else {
-              self.showMessage('Draw!');
-            }
-          }
-          else {
+          if (!self.checkGameEnd()) {
             self.hideMessage();
           }
         }, 300);
@@ -224,19 +224,31 @@
       var move = ChessAI.LoadedModules.States.getBestMove(
         new ChessAI.State(self.getState()), color, color, ChessAI.LoadedModules.Options.getMaxPlies());
       console.log(move);
-      if (move.rating == ChessAI.LoadedModules.States.CheckmateRating) {
-        self.showMessage('Checkmate! Human&nbsp;player&nbsp;wins.');
-        lockMessage = true;
-      }
-      else if (move.rating == ChessAI.LoadedModules.States.DrawRating) {
-        self.showMessage('Draw!');
-        lockMessage = true;
-      }
-      else {
+      if (!self.checkGameEnd()) {
         self.setState(move.board);
         turn = ChessAI.Color.flipColor(turn);
         console.log('Found move in ' + Math.floor((new Date() / 1000) - startTime) + ' seconds');
       }
+    };
+
+    /**
+     * Check for an end condition.
+     * @return {bool} game over
+     */
+    this.checkGameEnd = function() {
+      var moves = ChessAI.LoadedModules.States.getAllStates(self.getState(), turn, false);
+      if (moves.length == 0) {
+        if (ChessAI.LoadedModules.States.inCheck(self.getState(), turn)) {
+          self.showMessage('Checkmate!<br>' + ChessAI.Color.getName(ChessAI.Color.flipColor(turn)) + '&nbsp;wins.');
+        }
+        else {
+          self.showMessage('Draw!');
+        }
+
+        return true;
+      }
+
+      return false;
     };
 
     /**
