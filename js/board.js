@@ -7,6 +7,7 @@
     var blackCanCastle = true;
     var whiteCanCastle = true;
     var turn = ChessAI.Color.White;
+    var humanColor = ChessAI.Color.White;
 
     this.init = function() {
       self.setupBoard();
@@ -152,7 +153,7 @@
           $board.find('.square').removeClass('selected highlight');
         }
       }
-      else if (!ChessAI.LoadedModules.Options.isConstrainedToLegalMoves() || turn == ChessAI.LoadedModules.Options.playerColor) {
+      else if (!ChessAI.LoadedModules.Options.isConstrainedToLegalMoves() || turn == ChessAI.LoadedModules.Options.playerColor && ChessAI.Color.getFromPiece(getPiece($square)) == ChessAI.LoadedModules.Options.playerColor) {
         self.selectPiece($square);
       }
     };
