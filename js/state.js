@@ -60,7 +60,6 @@
     /**
      * Get array of legal moves for a square.
      * @todo currently missing moves such as castling and en passant capture
-     * @todo does not account for moves that result in check
      *
      * @param  {Array} state  8x8 array of board
      * @param  {int} row
@@ -133,7 +132,7 @@
           var initialRow = piece == P.BlackPawn ? 1 : 6;
 
           // initial move
-          if (row == initialRow && state[row+(dir*2)][col] == P.Empty) {
+          if (row == initialRow && state[row+dir][col] == P.Empty && state[row+(dir*2)][col] == P.Empty) {
             moves.push(new ChessAI.Move(piece, row, col, row+(dir*2), col));
           }
           if (row+dir >= 0 && row+dir < 8) {
