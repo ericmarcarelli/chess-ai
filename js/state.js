@@ -48,7 +48,7 @@
           rateState(moves[i], currColor);
         }
 
-        if (i == 0 || moves[i].rating > best.rating) {
+        if (i == 0 || moves[i].rating >= best.rating) {
           best = moves[i];
         }
       }
@@ -230,7 +230,7 @@
      * @param  {ChessAI.Color} color
      */
     var rateState = function(state, color) {
-      var mult = [], rating = 0;
+      var mult = [], rating = 0, directions = [[-1,-1], [-1,1], [1,1], [1,-1]], piece;
       mult[color] = 1;
       mult[ChessAI.Color.flipColor(color)] = -1;
 
@@ -242,12 +242,27 @@
             if (i > 1 && i < 6 && j > 1 && j < 6) {
               rating *= 1.2;
             }
+
+            // increase value if pawn is part of a solid structure
+            if (state.board[i][j] == P.BlackPawn || state.board[i][j] == P.WhitePawn) {
+              piece = state.board[i][j];
+
+              for(var k = 0; k < directions.length; k++) {
+                if (piece == state.board[i+directions[k][0]][j+directions[k][1]]) {
+                  rating *= 1.25;
+                  break;
+                }
+              }
+            }
+
+            // increase value as pawns advance
             if (state.board[i][j] == P.BlackPawn) {
-              rating += i*25;
+              rating += i * 25;
             }
             else if (state.board[i][j] == P.WhitePawn) {
               rating += (7-i) * 25;
             }
+
             state.rating += rating;
           }
         }
