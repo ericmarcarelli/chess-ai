@@ -238,29 +238,32 @@
         for(var j = 0; j < 8; j++) {
           if (state.board[i][j] != P.Empty) {
             rating = (mult[ChessAI.Color.getFromPiece(state.board[i][j])] * PieceValue[state.board[i][j]]);
+
             // increase value if controlling the center
             if (i > 1 && i < 6 && j > 1 && j < 6) {
-              rating *= 1.2;
+              rating *= 1.15;
             }
 
             // increase value if pawn is part of a solid structure
-            if (state.board[i][j] == P.BlackPawn || state.board[i][j] == P.WhitePawn) {
+            if ((i > 1 && i < 6) && (state.board[i][j] == P.BlackPawn || state.board[i][j] == P.WhitePawn)) {
               piece = state.board[i][j];
 
               for(var k = 0; k < directions.length; k++) {
-                if (piece == state.board[i+directions[k][0]][j+directions[k][1]]) {
-                  rating *= 1.25;
-                  break;
+                if (i+directions[k][0] >= 0 && i+directions[k][0] < 8 && j+directions[k][1] >= 0 && j+directions[k][1] < 8) {
+                  if (piece == state.board[i+directions[k][0]][j+directions[k][1]]) {
+                    rating *= 1.25;
+                    break;
+                  }
                 }
               }
             }
 
             // increase value as pawns advance
             if (state.board[i][j] == P.BlackPawn) {
-              rating += i * 25;
+              rating += i * 50 * mult[ChessAI.Color.Black];
             }
             else if (state.board[i][j] == P.WhitePawn) {
-              rating += (7-i) * 25;
+              rating += (7-i) * 50 * mult[ChessAI.Color.White];
             }
 
             state.rating += rating;
